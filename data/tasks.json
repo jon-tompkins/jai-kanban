@@ -1,0 +1,193 @@
+{
+  "lastUpdated": "2026-02-22T02:20:00Z",
+  "columns": ["queue", "active", "review", "done"],
+  "maxActive": 5,
+  "tags": ["dev", "research", "strategy", "design"],
+  "tasks": [
+    {
+      "id": "commit-reveal-api",
+      "title": "Commit-Reveal API Implementation",
+      "description": "Implement the commit-reveal trade system with agent-side hashing and signature verification.",
+      "tags": ["dev"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "high",
+      "created": "2026-02-22T02:00:00Z",
+      "spec": "~/clawstreet/docs/commit-reveal-api-spec.md",
+      "subtasks": [
+        "DB schema migration (commitment fields)",
+        "POST /api/trade/commit endpoint",
+        "POST /api/trade/close endpoint",
+        "POST /api/trade/reveal endpoint",
+        "Signature verification logic"
+      ]
+    },
+    {
+      "id": "view-keys",
+      "title": "View Keys Feature",
+      "description": "Allow agents to encrypt hidden fields and selectively share decryption keys with subscribers.",
+      "tags": ["dev"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "medium",
+      "created": "2026-02-22T02:00:00Z",
+      "subtasks": [
+        "Symmetric encryption for hidden fields",
+        "viewKey query param support",
+        "Key tier system (per-trade, period, master)"
+      ]
+    },
+    {
+      "id": "harberger-nft",
+      "title": "Harberger Tax NFT Contract",
+      "description": "Smart contract for view key NFTs with Harberger taxation on Base.",
+      "tags": ["dev", "strategy"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "medium",
+      "created": "2026-02-22T02:00:00Z",
+      "subtasks": [
+        "Draft Solidity contract",
+        "Tax rate mechanics",
+        "Force-buy / seize logic",
+        "Tax distribution (agent/protocol split)",
+        "Deploy to Base testnet"
+      ]
+    },
+    {
+      "id": "agent-signing-helpers",
+      "title": "Agent Signing Helpers",
+      "description": "Provide JS/Python snippets and optional CLI tool for agents to hash and sign trades.",
+      "tags": ["dev"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "high",
+      "created": "2026-02-22T02:00:00Z",
+      "subtasks": [
+        "JS example (ethers.js)",
+        "Python example (eth_account)",
+        "Optional: clawstreet-sign npm package"
+      ]
+    },
+    {
+      "id": "reveal-period-system",
+      "title": "Reveal Period & Rewards",
+      "description": "Implement 2-week reveal cycles with grace period and reward calculation on revealed trades only.",
+      "tags": ["dev", "strategy"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "medium",
+      "created": "2026-02-22T02:00:00Z",
+      "subtasks": [
+        "Reveal period cron job",
+        "Grace period notifications",
+        "Failed reveal handling",
+        "Rewards calculation refactor"
+      ]
+    },
+    {
+      "id": "clawstreet-mobile",
+      "title": "Agent Detail Page Mobile",
+      "description": "Make the agent detail page mobile-responsive like homepage.",
+      "tags": ["dev", "design"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "low",
+      "created": "2026-02-21T05:15:00Z"
+    },
+    {
+      "id": "nuclear-rebalance-2026-02-11",
+      "title": "Nuclear Portfolio Rebalance",
+      "description": "Target $50k delta-adjusted exposure at 50/25/17/8 (URA/UUUU/DNN/NNE). URA via options, others via spot.",
+      "tags": ["strategy"],
+      "status": "queue",
+      "assignee": "jon",
+      "priority": "high",
+      "created": "2026-02-11T21:59:00Z",
+      "details": {
+        "URA": "+$18,500 (options)",
+        "UUUU": "+$10,275 (spot)",
+        "DNN": "+$760 (spot)",
+        "NNE": "+$1,600 (spot)",
+        "total_new_capital": "$31,135"
+      }
+    },
+    {
+      "id": "portfolio-db-briefings",
+      "title": "Portfolio Briefings from DB",
+      "description": "Update morning briefing script to pull from Supabase instead of stale JSON.",
+      "tags": ["dev"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "high",
+      "created": "2026-02-11T18:17:00Z"
+    },
+    {
+      "id": "et-deep-dive",
+      "title": "ET Deep Dive",
+      "description": "Research Energy Transfer - from journal entry.",
+      "tags": ["research"],
+      "status": "queue",
+      "assignee": "scout",
+      "priority": "medium",
+      "created": "2026-02-11T18:00:00Z"
+    },
+    {
+      "id": "smci-accounting",
+      "title": "SMCI Accounting Investigation",
+      "description": "Potential cooking the books situation. Research accounting concerns, history of issues.",
+      "tags": ["research"],
+      "status": "queue",
+      "assignee": "scout",
+      "priority": "medium",
+      "created": "2026-02-11T18:00:00Z"
+    },
+    {
+      "id": "price-alerts-system",
+      "title": "Price Alert System",
+      "description": "Set up alerts for key levels: ONDS ~7, SLV 80, BTC 50k, HYPE 20s.",
+      "tags": ["dev"],
+      "status": "queue",
+      "assignee": "builder",
+      "priority": "medium",
+      "created": "2026-02-11T18:17:00Z"
+    }
+  ],
+  "archived": [
+    {
+      "id": "clawstreet-mobile-homepage",
+      "title": "Clawstreet Homepage Mobile",
+      "tags": ["dev", "design"],
+      "status": "done",
+      "result": "✅ Shipped 2026-02-21"
+    },
+    {
+      "id": "positions-tab-2026-02-09",
+      "title": "Positions Tab & Trade Management",
+      "tags": ["dev"],
+      "status": "done",
+      "result": "✅ Shipped"
+    },
+    {
+      "id": "plaid-integration",
+      "title": "Plaid Integration",
+      "tags": ["dev"],
+      "status": "done",
+      "result": "✅ Completed"
+    },
+    {
+      "id": "myjunto-scheduling",
+      "title": "MyJunto Custom Scheduling",
+      "tags": ["dev"],
+      "status": "done",
+      "result": "✅ Working"
+    },
+    {
+      "id": "lac-deep-dive",
+      "title": "LAC Deep Dive",
+      "tags": ["research"],
+      "status": "done",
+      "result": "✅ Published to myjunto.xyz/research"
+    }
+  ]
+}
