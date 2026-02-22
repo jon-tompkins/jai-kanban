@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import tasksData from '../data/tasks.json';
 
 interface Task {
   id: string;
@@ -42,33 +43,7 @@ const tagColors: Record<string, string> = {
 };
 
 export default function Home() {
-  const [data, setData] = useState<KanbanData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/tasks')
-      .then(res => res.json())
-      .then(setData)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-400 text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-red-400 text-xl">Failed to load tasks</div>
-      </div>
-    );
-  }
-
+  const data = tasksData as KanbanData;
   const columns = ['queue', 'active', 'review', 'done'];
   const tasksByColumn = columns.reduce((acc, col) => {
     acc[col] = data.tasks.filter(t => t.status === col);
