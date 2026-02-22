@@ -19,64 +19,82 @@ interface Task {
 interface KanbanData {
   lastUpdated: string;
   columns: string[];
+  maxActive?: number;
+  tags: string[];
   tasks: Task[];
 }
 
-const columnLabels: Record<string, string> = {
-  queue: '📋 Queue',
-  active: '🔥 Active',
-  review: '👀 Review',
-  done: '✅ Done'
-};
-
-const priorityColors: Record<string, string> = {
-  high: 'border-l-red-500',
-  medium: 'border-l-yellow-500',
-  low: 'border-l-green-500'
-};
-
 const tagColors: Record<string, string> = {
-  dev: 'bg-blue-600',
-  research: 'bg-purple-600',
-  strategy: 'bg-orange-600',
-  design: 'bg-pink-600'
+  dev: 'bg-amber-500 text-black',
+  research: 'bg-emerald-500 text-black',
+  strategy: 'bg-amber-500 text-black',
+  design: 'bg-pink-500 text-black'
 };
 
 export default function Home() {
   const data = tasksData as KanbanData;
+  const [filter, setFilter] = useState<string>('all');
+  
   const columns = ['queue', 'active', 'review', 'done'];
+  const allTags = ['all', ...data.tags];
+  
+  const filteredTasks = filter === 'all' 
+    ? data.tasks 
+    : data.tasks.filter(t => t.tags.includes(filter));
+  
   const tasksByColumn = columns.reduce((acc, col) => {
-    acc[col] = data.tasks.filter(t => t.status === col);
+    acc[col] = filteredTasks.filter(t => t.status === col);
     return acc;
   }, {} as Record<string, Task[]>);
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">⚡ Jai Kanban</h1>
-        <p className="text-gray-400 text-sm">
-          Last updated: {new Date(data.lastUpdated).toLocaleString()}
-        </p>
-      </header>
+  const activeCount = tasksByColumn['active'].length;
+  const maxActive = data.maxActive || 5;
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 font-mono">
+      {/* Filter tabs */}
+      <div className="flex gap-2 p-4 border-b border-gray-800">
+        {allTags.map(tag => (
+          <button
+            key={tag}
+            onClick={() => setFilter(tag)}
+            className={`px-3 py-1 text-xs uppercase tracking-wide transition-colors ${
+              filter === tag 
+                ? 'bg-amber-500 text-black font-bold' 
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+
+      {/* Kanban columns */}
+      <div className="grid grid-cols-4 h-[calc(100vh-60px)]">
         {columns.map(col => (
-          <div key={col} className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              {columnLabels[col]}
-              <span className="bg-gray-700 text-gray-300 text-sm px-2 py-0.5 rounded">
-                {tasksByColumn[col].length}
+          <div key={col} className="border-r border-gray-800 flex flex-col">
+            {/* Column header */}
+            <div className="p-3 border-b border-gray-800">
+              <span className="text-gray-500 uppercase text-sm tracking-wider">
+                {col} ({tasksByColumn[col].length})
+                {col === 'active' && (
+                  <span className="text-amber-500 ml-1">({activeCount}/{maxActive})</span>
+                )}
               </span>
-            </h2>
-            <div className="space-y-3">
+            </div>
+            
+            {/* Tasks */}
+            <div className="flex-1 overflow-y-auto p-2 space-y-2">
               {tasksByColumn[col].map(task => (
                 <TaskCard key={task.id} task={task} />
               ))}
-              {tasksByColumn[col].length === 0 && (
-                <div className="text-gray-500 text-sm text-center py-4">
-                  No tasks
-                </div>
-              )}
+            </div>
+            
+            {/* Add card button */}
+            <div className="p-2 border-t border-gray-800">
+              <button className="w-full py-2 text-gray-600 hover:text-gray-400 text-sm transition-colors">
+                + Add Card
+              </button>
             </div>
           </div>
         ))}
@@ -90,40 +108,33 @@ function TaskCard({ task }: { task: Task }) {
 
   return (
     <div
-      className={`bg-gray-700 rounded-lg p-3 border-l-4 ${priorityColors[task.priority]} cursor-pointer hover:bg-gray-600 transition-colors`}
+      className="bg-[#111] border border-gray-800 p-3 cursor-pointer hover:border-gray-600 transition-colors"
       onClick={() => setExpanded(!expanded)}
     >
+      <h3 className="text-white text-sm font-medium mb-2">{task.title}</h3>
       <div className="flex flex-wrap gap-1 mb-2">
         {task.tags.map(tag => (
           <span
             key={tag}
-            className={`text-xs px-2 py-0.5 rounded ${tagColors[tag] || 'bg-gray-600'}`}
+            className={`text-[10px] px-2 py-0.5 uppercase font-bold ${tagColors[tag] || 'bg-gray-600 text-white'}`}
           >
             {tag}
           </span>
         ))}
       </div>
-      <h3 className="font-medium text-white mb-1">{task.title}</h3>
-      {expanded && (
-        <div className="mt-3 space-y-2">
-          <p className="text-gray-300 text-sm">{task.description}</p>
-          {task.subtasks && task.subtasks.length > 0 && (
-            <div className="mt-2">
-              <p className="text-gray-400 text-xs uppercase mb-1">Subtasks</p>
-              <ul className="text-sm text-gray-300 space-y-1">
-                {task.subtasks.map((st, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-gray-500">•</span>
-                    {st}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <div className="flex justify-between text-xs text-gray-400 mt-2 pt-2 border-t border-gray-600">
-            <span>Assignee: {task.assignee}</span>
-            <span>{task.priority} priority</span>
-          </div>
+      <p className="text-gray-500 text-xs line-clamp-2">{task.description}</p>
+      
+      {expanded && task.subtasks && task.subtasks.length > 0 && (
+        <div className="mt-3 pt-2 border-t border-gray-800">
+          <p className="text-gray-600 text-[10px] uppercase mb-1">Subtasks</p>
+          <ul className="text-xs text-gray-400 space-y-1">
+            {task.subtasks.map((st, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="text-gray-600">○</span>
+                {st}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
