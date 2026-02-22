@@ -124,6 +124,11 @@ function TaskCard({ task }: { task: Task }) {
       </div>
       <p className="text-gray-500 text-xs line-clamp-2">{task.description}</p>
       
+      {/* Assignee */}
+      <div className="mt-2 text-[10px] text-gray-600 uppercase">
+        → {task.assignee}
+      </div>
+      
       {expanded && task.subtasks && task.subtasks.length > 0 && (
         <div className="mt-3 pt-2 border-t border-gray-800">
           <p className="text-gray-600 text-[10px] uppercase mb-1">Subtasks</p>
